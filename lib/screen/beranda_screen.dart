@@ -66,7 +66,7 @@ class _BerandaScreenState extends State<BerandaScreen> {
         actions: [
           IconButton(
               onPressed: () async {
-                //signout google
+                //signout google 1
                 signOut(context: context);
                 SharedPreferences pref = await SharedPreferences.getInstance();
                 Navigator.pushReplacementNamed(context, AuthScreen.id);
