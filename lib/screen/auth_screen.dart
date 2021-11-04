@@ -6,6 +6,7 @@ import 'package:flutter_intermediate/screen/registeremailpass_screen.dart';
 import 'package:flutter_intermediate/screen/registermysql_screen.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:toast/toast.dart';
 
 import 'beranda_screen.dart';
 
@@ -102,17 +103,13 @@ class AuthScreen extends StatelessWidget {
       }
 
       final user = userCredential.user;
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text('Sign In ${user?.uid} with Google'),
-      ));
+
+      Toast.show('Sign In ${user?.uid} with Google', context);
+
       Navigator.popAndPushNamed(context, BerandaScreen.id);
     } catch (e) {
       print(e);
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to sign in with Google: $e'),
-        ),
-      );
+      Toast.show('Failed to sign in with Google: $e', context);
     }
   }
 }

@@ -1,10 +1,62 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intermediate/screen/auth_screen.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class BerandaScreen extends StatelessWidget {
+import 'package:flutter/foundation.dart' show kIsWeb;
+
+GoogleSignIn _googleSignIn = GoogleSignIn(
+  // Optional clientId
+  // clientId: '479882132969-9i9aqik3jfjd7qhci1nqf0bm2g71rm1u.apps.googleusercontent.com',
+  scopes: <String>[
+    'email',
+    'https://www.googleapis.com/auth/contacts.readonly',
+  ],
+);
+
+class BerandaScreen extends StatefulWidget {
   static String id = "beranda";
   const BerandaScreen({Key? key}) : super(key: key);
+
+  @override
+  State<BerandaScreen> createState() => _BerandaScreenState();
+}
+
+class _BerandaScreenState extends State<BerandaScreen> {
+  GoogleSignInAccount? _currentUser;
+  String _contactText = '';
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
+      setState(() {
+        _currentUser = account;
+      });
+      if (_currentUser != null) {
+        // _handleGetContact(_currentUser!);
+      }
+    });
+    _googleSignIn.signInSilently();
+  }
+
+  static Future<void> signOut({required BuildContext context}) async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+
+    try {
+      if (!kIsWeb) {
+        await googleSignIn.signOut();
+      }
+      await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   Authentication.customSnackBar(
+      //     content: 'Error signing out. Try again.',
+      //   ),
+      // );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,11 +66,13 @@ class BerandaScreen extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () async {
+                //signout google
+                signOut(context: context);
                 SharedPreferences pref = await SharedPreferences.getInstance();
                 Navigator.pushReplacementNamed(context, AuthScreen.id);
                 pref.clear();
               },
-              icon: Icon(Icons.logout))
+              icon: Icon(Icons.logout)),
         ],
       ),
       body: Column(
