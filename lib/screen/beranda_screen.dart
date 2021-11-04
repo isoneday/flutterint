@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_intermediate/screen/adaptive_screen.dart';
 import 'package:flutter_intermediate/screen/auth_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -80,8 +81,8 @@ class _BerandaScreenState extends State<BerandaScreen> {
           Flexible(
             child: Row(
               children: [
-                tampilanMenu("list wisata", "gambar/bg2.png", Colors.blue,
-                    context, AuthScreen.id),
+                tampilanMenu("Adaptive", "gambar/bg2.png", Colors.blue, context,
+                    AdaptiveScreen.id),
                 SizedBox(
                   width: 10,
                 ),

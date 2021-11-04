@@ -97,5 +97,24 @@
       loadMainDartJs();
     }
   </script>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyB82pS2dP3SVqapQYepbIqYyiAc2rn9ReA",
+      authDomain: "flutter-inter-app-ina.firebaseapp.com",
+      projectId: "flutter-inter-app-ina",
+      storageBucket: "flutter-inter-app-ina.appspot.com",
+      messagingSenderId: "638110118837",
+      appId: "1:638110118837:web:6095d30b7938bfe5be5ffc"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+  </script>
 </body>
 </html>
