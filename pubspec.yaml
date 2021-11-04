@@ -39,7 +39,8 @@ dependencies:
   http: ^0.13.4
   toast: ^0.1.5
   firebase_auth: ^3.1.4
-   
+  firebase_core: ^1.8.0
+  google_sign_in: ^5.2.1
 
 dev_dependencies:
   flutter_test:

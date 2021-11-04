@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intermediate/customsplash_screen.dart';
 import 'package:flutter_intermediate/screen/auth_screen.dart';
@@ -9,7 +10,9 @@ import 'package:flutter_intermediate/screen/loginphone_screen.dart';
 import 'package:flutter_intermediate/screen/registeremailpass_screen.dart';
 import 'package:flutter_intermediate/screen/registermysql_screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -20,7 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(initialRoute: CustomSplashScreen.id, routes: {
       CustomSplashScreen.id: (context) => const CustomSplashScreen(),
-      AuthScreen.id: (context) => const AuthScreen(),
+      AuthScreen.id: (context) => AuthScreen(),
       LoginEmailPassScreen.id: (context) => const LoginEmailPassScreen(),
       LoginGoogleScreen.id: (context) => const LoginGoogleScreen(),
       LoginPhoneScreen.id: (context) => const LoginPhoneScreen(),

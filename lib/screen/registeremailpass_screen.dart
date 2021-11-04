@@ -24,42 +24,46 @@ class _RegisterEmailPassScreenState extends State<RegisterEmailPassScreen> {
       appBar: AppBar(
         title: Text("Register"),
       ),
-      body: 
-      SingleChildScrollView(
-        child: Column(
-          children: [
-            TextField(
-              keyboardType: TextInputType.emailAddress,
-              onChanged: (value) {
-                email = value;
-              },
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            TextField(
-              keyboardType: TextInputType.number,
-              obscureText: true,
-              onChanged: (value) {
-                password = value;
-              },
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            RoundedButton(
-              text: "Register",
-              color: Colors.blue[700],
-              callback: () {
-                prosesRegister();
-              },
-            ),
-            loading == true
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : Container()
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              TextField(
+                keyboardType: TextInputType.emailAddress,
+                onChanged: (value) {
+                  email = value;
+                },
+                decoration: InputDecoration(hintText: "email"),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              TextField(
+                keyboardType: TextInputType.number,
+                obscureText: true,
+                decoration: InputDecoration(hintText: "password"),
+                onChanged: (value) {
+                  password = value;
+                },
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              RoundedButton(
+                text: "Register",
+                color: Colors.blue[700],
+                callback: () {
+                  prosesRegister();
+                },
+              ),
+              loading == true
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : Container()
+            ],
+          ),
         ),
       ),
     );
@@ -67,8 +71,11 @@ class _RegisterEmailPassScreenState extends State<RegisterEmailPassScreen> {
 
   Future<void> prosesRegister() async {
     loading = true;
-    User user = await auth.createUserWithEmailAndPassword(
-        email: email!, password: password!) as User;
+    User? user = (await auth.createUserWithEmailAndPassword(
+      email: email!,
+      password: password!,
+    ))
+        .user;
     if (user != null) {
       setState(() {
         loading = false;

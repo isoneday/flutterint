@@ -66,9 +66,12 @@ class _LoginEmailPassScreenState extends State<LoginEmailPassScreen> {
 
   Future<void> prosesLogin() async {
     loading = true;
-    User user = await auth.signInWithEmailAndPassword(
-        email: email!, password: password!) as User;
-    if (user.emailVerified) {
+    User? user = (await auth.signInWithEmailAndPassword(
+      email: email!,
+      password: password!,
+    ))
+        .user;
+    if (user!.emailVerified) {
       setState(() {
         loading = false;
       });
