@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_intermediate/model/auth_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,6 +15,13 @@ class Network {
       "nama": nama,
       "phone": phone
     });
+
+    if (response.statusCode == 200) {
+      ModelAuth auth = ModelAuth.fromJson(jsonDecode(response.body));
+      return auth;
+    } else {
+      return null;
+    }
   }
 
   Future<ModelAuth?> loginUser(
@@ -20,7 +29,11 @@ class Network {
     final endpoint = Uri.http(_host, "servernotif/api/login");
     final response = await http.post(endpoint,
         body: {"f_email": email, "f_password": password, "device": device});
+    if (response.statusCode == 200) {
+      ModelAuth auth = ModelAuth.fromJson(jsonDecode(response.body));
+      return auth;
+    } else {
+      return null;
+    }
   }
-
-
 }
