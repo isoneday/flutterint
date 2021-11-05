@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -23,7 +25,7 @@ class _ChatScreenState extends State<ChatScreen> {
   TextEditingController msgEdtController = TextEditingController();
   String? msgText, idUser, fcm, tokenUpdate, token, device, email;
   var dataEmail;
-
+  ScrollController _controller = ScrollController();
   dynamic user;
   String? userEmail;
   String? userPhoneNumber;
@@ -77,6 +79,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       return textItems == null
                           ? Center(child: Text("belum ada chatting"))
                           : ListView(
+                              controller: _controller,
                               children: textItems,
                             );
                     }
@@ -92,13 +95,25 @@ class _ChatScreenState extends State<ChatScreen> {
                         decoration: kMessageTextFieldDecoration)),
                 TextButton(
                     onPressed: () async {
+                      Timer(
+                          Duration(milliseconds: 300),
+                          () => _controller
+                              .jumpTo(_controller.position.maxScrollExtent));
                       if (msgEdtController.text.length > 0) {
                         await _firestore.collection("messages").add({
                           "text": msgEdtController.text,
                           "sender": userEmail ?? email,
                           "createdAt": Timestamp.now()
                         });
-                        msgEdtController.clear();
+                        FocusScope.of(context).requestFocus(FocusNode());
+
+                        setState(() {
+                          msgEdtController.clear();
+                        });
+                        Timer(
+                            Duration(milliseconds: 500),
+                            () => _controller
+                                .jumpTo(_controller.position.maxScrollExtent));
                       }
                     },
                     child: Text("Send"))

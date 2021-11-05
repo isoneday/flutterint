@@ -69,7 +69,7 @@ class AuthScreen extends StatelessWidget {
               color: Colors.blue[700],
               text: "Register Email Pass",
               callback: () {
-                Navigator.pushNamed(context, RegisterMysqlSCreen.id);
+                Navigator.pushNamed(context, RegisterEmailPassScreen.id);
               },
             ),
             RoundedButton(
