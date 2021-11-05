@@ -32,6 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
     user = await _auth.currentUser;
     userEmail = user.email;
     userPhoneNumber = user.phoneNumber;
+    print("userphone :" + userPhoneNumber.toString());
   }
 
   @override
