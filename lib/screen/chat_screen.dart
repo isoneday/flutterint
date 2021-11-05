@@ -23,10 +23,22 @@ class _ChatScreenState extends State<ChatScreen> {
   TextEditingController msgEdtController = TextEditingController();
   String? msgText, idUser, fcm, tokenUpdate, token, device, email;
   var dataEmail;
+
+  dynamic user;
+  String? userEmail;
+  String? userPhoneNumber;
+
+  void getCurrentUserInfo() async {
+    user = await _auth.currentUser;
+    userEmail = user.email;
+    userPhoneNumber = user.phoneNumber;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getCurrentUserInfo();
     getPref();
   }
 
@@ -52,18 +64,13 @@ class _ChatScreenState extends State<ChatScreen> {
                       List<DocumentSnapshot> docs = snapshot.data!.docs;
                       List<MessageBubble> textItems = [];
 
-                      if (_currentUser?.email != null) {
-                        dataEmail = _currentUser?.email;
-                      } else {
-                        dataEmail = email;
-                      }
                       for (DocumentSnapshot doc in docs) {
                         textItems.add(MessageBubble(
                           from: (doc.data() as dynamic)["sender"],
                           text: (doc.data() as dynamic)["text"],
                           date: (doc.data() as dynamic)["createdAt"],
                           fromMe:
-                              dataEmail == (doc.data() as dynamic)["sender"],
+                              userEmail == (doc.data() as dynamic)["sender"],
                         ));
                       }
                       return textItems == null
@@ -87,7 +94,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       if (msgEdtController.text.length > 0) {
                         await _firestore.collection("messages").add({
                           "text": msgEdtController.text,
-                          "sender": _currentUser?.email ?? email,
+                          "sender": userEmail ?? email,
                           "createdAt": Timestamp.now()
                         });
                         msgEdtController.clear();
@@ -107,8 +114,13 @@ class _ChatScreenState extends State<ChatScreen> {
     idUser = preferences.getString("iduser");
     fcm = preferences.getString("fcm");
     token = preferences.getString("token");
-    setState(() {
-      dataEmail = _currentUser?.email;
-    });
+    // setState(() {
+    //   dataEmail = _auth.currentUser?.email;
+    // });
+    if (_currentUser?.email != null) {
+      dataEmail = _auth.currentUser?.email;
+    } else {
+      dataEmail = email;
+    }
   }
 }
