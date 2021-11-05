@@ -5,6 +5,7 @@ import 'package:flutter_intermediate/customsplash_screen.dart';
 import 'package:flutter_intermediate/screen/adaptive_screen.dart';
 import 'package:flutter_intermediate/screen/auth_screen.dart';
 import 'package:flutter_intermediate/screen/beranda_screen.dart';
+import 'package:flutter_intermediate/screen/chat_screen.dart';
 import 'package:flutter_intermediate/screen/detaildevice_screen.dart';
 import 'package:flutter_intermediate/screen/loginemailpass_screen.dart';
 import 'package:flutter_intermediate/screen/loginmysql_screen.dart';
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
           RegisterMysqlSCreen.id: (context) => const RegisterMysqlSCreen(),
           BerandaScreen.id: (context) => const BerandaScreen(),
           AdaptiveScreen.id: (context) => const AdaptiveScreen(),
+          ChatScreen.id: (context) => const ChatScreen(),
         });
   }
 }

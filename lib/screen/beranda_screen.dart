@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intermediate/screen/adaptive_screen.dart';
 import 'package:flutter_intermediate/screen/auth_screen.dart';
+import 'package:flutter_intermediate/screen/chat_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -87,7 +88,7 @@ class _BerandaScreenState extends State<BerandaScreen> {
                   width: 10,
                 ),
                 tampilanMenu("Chat", "gambar/bg1.png", Colors.yellow,
-                    context, AuthScreen.id)
+                    context, ChatScreen.id)
               ],
             ),
           ),
