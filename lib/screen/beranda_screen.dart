@@ -86,7 +86,7 @@ class _BerandaScreenState extends State<BerandaScreen> {
                 SizedBox(
                   width: 10,
                 ),
-                tampilanMenu("grid wisata", "gambar/bg1.png", Colors.yellow,
+                tampilanMenu("Chat", "gambar/bg1.png", Colors.yellow,
                     context, AuthScreen.id)
               ],
             ),
