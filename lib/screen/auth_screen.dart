@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intermediate/helper/rounded_button.dart';
 import 'package:flutter_intermediate/screen/loginemailpass_screen.dart';
+import 'package:flutter_intermediate/screen/loginmysql_screen.dart';
 import 'package:flutter_intermediate/screen/loginphone_screen.dart';
 import 'package:flutter_intermediate/screen/registeremailpass_screen.dart';
 import 'package:flutter_intermediate/screen/registermysql_screen.dart';
@@ -51,7 +52,7 @@ class AuthScreen extends StatelessWidget {
               color: Colors.blue[700],
               text: "Login by MySql",
               callback: () {
-                Navigator.pushNamed(context, LoginEmailPassScreen.id);
+                Navigator.pushNamed(context, LoginMysqlScreen.id);
               },
             ),
             SizedBox(
@@ -68,7 +69,7 @@ class AuthScreen extends StatelessWidget {
               color: Colors.blue[700],
               text: "Register Email Pass",
               callback: () {
-                Navigator.pushNamed(context, RegisterEmailPassScreen.id);
+                Navigator.pushNamed(context, RegisterMysqlSCreen.id);
               },
             ),
             RoundedButton(
