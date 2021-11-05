@@ -1,3 +1,4 @@
+//model auth = register dan login
 class ModelAuth {
   String? result;
   String? token;
