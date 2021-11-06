@@ -94,6 +94,8 @@ class _LoginMysqlScreenState extends State<LoginMysqlScreen> {
           sharedPreferences.setBool("sesi", true);
           sharedPreferences.setString("iduser", response!.data!.idUser!);
           sharedPreferences.setString("token", response.token!);
+          sharedPreferences.setString("tokenfcm", response.data?.userGcm ?? "");
+
           sharedPreferences.setString("email", response.data!.userEmail!);
 
           Navigator.popAndPushNamed(context, BerandaScreen.id);

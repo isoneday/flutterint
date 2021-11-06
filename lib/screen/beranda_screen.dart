@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intermediate/main.dart';
+import 'package:flutter_intermediate/network/network_api.dart';
 import 'package:flutter_intermediate/screen/adaptive_screen.dart';
 import 'package:flutter_intermediate/screen/auth_screen.dart';
 import 'package:flutter_intermediate/screen/chat_screen.dart';
@@ -10,6 +11,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -32,11 +34,17 @@ class BerandaScreen extends StatefulWidget {
 class _BerandaScreenState extends State<BerandaScreen> {
   GoogleSignInAccount? _currentUser;
   String _contactText = '';
+  String? token_fcm;
+  Network network = Network();
+
+  String? idUser;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getPref();
     notification();
+
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
       setState(() {
         _currentUser = account;
@@ -126,9 +134,15 @@ class _BerandaScreenState extends State<BerandaScreen> {
   }
 
   void notification() {
-    FirebaseMessaging.instance
-        .getToken()
-        .then((value) => print("token saya :$value"));
+    FirebaseMessaging.instance.getToken().then((value) async {
+      print("token saya :$value");
+      if (token_fcm == '') {
+        SharedPreferences sharedPreferences =
+            await SharedPreferences.getInstance();
+        sharedPreferences.setString("tokenfcm", value!);
+        setTokentoDB(value);
+      }
+    });
 
     FirebaseMessaging.instance
         .getInitialMessage()
@@ -217,6 +231,19 @@ class _BerandaScreenState extends State<BerandaScreen> {
     );
 
     showDialog(context: context, builder: (context) => alert);
+  }
+
+  void setTokentoDB(String? value) {
+    network.registrTokenFCM(idUser, value).then((response) {
+      Toast.show(response?.msg, context);
+    });
+  }
+
+  Future<void> getPref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    idUser = preferences.getString("iduser");
+    token_fcm = preferences.getString("tokenfcm");
+    print("token fcm mysql : $token_fcm");
   }
 }
 

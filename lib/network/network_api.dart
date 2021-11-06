@@ -66,7 +66,27 @@ class Network {
     });
 
     if (response.statusCode == 200) {
-      ModelInsertBooking booking = ModelInsertBooking.fromJson(jsonDecode(response.body));
+      ModelInsertBooking booking =
+          ModelInsertBooking.fromJson(jsonDecode(response.body));
+      return booking;
+    } else {
+      return null;
+    }
+  }
+
+  Future<ModelInsertBooking?> registrTokenFCM(
+    String? iduser,
+    String? tokenfcm,
+  ) async {
+    final endpoint = Uri.http(_host, "servernotif/api/registerGcm");
+    final response = await http.post(endpoint, body: {
+      "f_idUser": iduser,
+      "f_gcm": tokenfcm,
+    });
+
+    if (response.statusCode == 200) {
+      ModelInsertBooking booking =
+          ModelInsertBooking.fromJson(jsonDecode(response.body));
       return booking;
     } else {
       return null;
