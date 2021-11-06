@@ -5,9 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intermediate/helper/constant.dart';
+import 'package:flutter_intermediate/helper/general_helper.dart';
 import 'package:flutter_intermediate/helper/messagebubble.dart';
 import 'package:flutter_intermediate/helper/rounded_button.dart';
+import 'package:flutter_intermediate/network/network_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toast/toast.dart';
 
 class ChatScreen extends StatefulWidget {
   static String id = "chat";
@@ -22,6 +25,7 @@ class _ChatScreenState extends State<ChatScreen> {
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
   User? _currentUser;
+  Network network = Network();
   TextEditingController msgEdtController = TextEditingController();
   String? msgText, idUser, fcm, tokenUpdate, token, device, email;
   var dataEmail;
@@ -32,16 +36,15 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void getCurrentUserInfo() async {
     user = await _auth.currentUser;
-    userEmail = user.email;
-    userPhoneNumber = user.phoneNumber;
-    print("userphone :" + userPhoneNumber.toString());
+    userEmail = user?.email ?? email;
+    // userPhoneNumber = user.phoneNumber;
+    // print("userphone :" + userPhoneNumber.toString());
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getCurrentUserInfo();
     getPref();
   }
 
@@ -130,6 +133,10 @@ class _ChatScreenState extends State<ChatScreen> {
     idUser = preferences.getString("iduser");
     fcm = preferences.getString("fcm");
     token = preferences.getString("token");
+    setState(() {
+      email = preferences.getString("email");
+    });
+
     // setState(() {
     //   dataEmail = _auth.currentUser?.email;
     // });
@@ -138,7 +145,21 @@ class _ChatScreenState extends State<ChatScreen> {
     } else {
       dataEmail = email;
     }
+    getCurrentUserInfo();
   }
 
-  void insertChatToDatabase(String text) {}
+  Future<void> insertChatToDatabase(String text) async {
+    var device = await getId();
+    return network
+        .insertChat(idUser, "-6.896754", "107.6133727", "-6.9202814",
+            "107.6080291", "Eduplex", "De Braga", text, "5km", token, device)
+        .then((response) {
+      Toast.show(response?.msg, context);
+      // if (response?.result == "true") {
+      //   Toast.show(response?.msg, context);
+      // } else {
+      //   Toast.show(response?.msg, context);
+      // }
+    });
+  }
 }

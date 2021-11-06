@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intermediate/helper/rounded_button.dart';
 import 'package:flutter_intermediate/network/network_api.dart';
@@ -16,6 +17,7 @@ class _RegisterMysqlSCreenState extends State<RegisterMysqlSCreen> {
   String? email, password, nama, phone;
   bool? loading;
   Network network = Network();
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +92,7 @@ class _RegisterMysqlSCreenState extends State<RegisterMysqlSCreen> {
     loading = true;
     network.registerUser(email, password, nama, phone).then((response) {
       if (response?.result == "true") {
+        prosesRegisterFirebase();
         Toast.show(response?.msg, context);
         Navigator.popAndPushNamed(context, LoginMysqlScreen.id);
         setState(() {
@@ -108,5 +111,27 @@ class _RegisterMysqlSCreenState extends State<RegisterMysqlSCreen> {
         );
       }
     });
+  }
+
+  Future<void> prosesRegisterFirebase() async {
+    loading = true;
+    User? user = (await auth.createUserWithEmailAndPassword(
+      email: email!,
+      password: password!,
+    ))
+        .user;
+    if (user != null) {
+      setState(() {
+        loading = false;
+      });
+      user.sendEmailVerification();
+      // Navigator.popAndPushNamed(context, LoginEmailPassScreen.id);
+      // Toast.show("Berhasil Register,Silahkan Periksa Email Anda", context);
+    } else {
+      setState(() {
+        loading = false;
+      });
+      Toast.show("Gagal Register", context);
+    }
   }
 }
