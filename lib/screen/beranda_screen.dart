@@ -1,12 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_intermediate/main.dart';
 import 'package:flutter_intermediate/screen/adaptive_screen.dart';
 import 'package:flutter_intermediate/screen/auth_screen.dart';
 import 'package:flutter_intermediate/screen/chat_screen.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:url_launcher/url_launcher.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
   // Optional clientId
@@ -32,6 +36,7 @@ class _BerandaScreenState extends State<BerandaScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    notification();
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
       setState(() {
         _currentUser = account;
@@ -87,8 +92,8 @@ class _BerandaScreenState extends State<BerandaScreen> {
                 SizedBox(
                   width: 10,
                 ),
-                tampilanMenu("Chat", "gambar/bg1.png", Colors.yellow,
-                    context, ChatScreen.id)
+                tampilanMenu("Chat", "gambar/bg1.png", Colors.yellow, context,
+                    ChatScreen.id)
               ],
             ),
           ),
@@ -118,6 +123,100 @@ class _BerandaScreenState extends State<BerandaScreen> {
         ],
       ),
     );
+  }
+
+  void notification() {
+    FirebaseMessaging.instance
+        .getToken()
+        .then((value) => print("token saya :$value"));
+
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then((RemoteMessage? message) {
+      if (message != null) {
+        var notificationData = message.data;
+        var view = notificationData["view"];
+        if (view == "url") {
+          openWeb(message);
+        } else {
+          showAlertDialog(context, message);
+        }
+      }
+    });
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null && !kIsWeb) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channelDescription: channel.description,
+                // TODO add a proper drawable resource to android, for now using
+                //      one that already exists in example app.
+                icon: 'launch_background',
+              ),
+            ));
+      }
+      if (message != null) {
+        var notificationData = message.data;
+        var view = notificationData["view"];
+        if (view == "url") {
+          openWeb(message);
+        } else {
+          showAlertDialog(context, message);
+        }
+      }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      if (message != null) {
+        var notificationData = message.data;
+        var view = notificationData["view"];
+        if (view == "url") {
+          openWeb(message);
+        } else {
+          showAlertDialog(context, message);
+        }
+      }
+    });
+  }
+
+  Future<void> openWeb(RemoteMessage message) async {
+    bool _validUrl = Uri.parse(message.notification!.body!).isAbsolute;
+    if (_validUrl) {
+      await canLaunch(message.notification!.body!)
+          ? await launch(message.notification!.body!)
+          : throw 'Could not launch ${message.notification!.body!}';
+    }
+  }
+
+  void showAlertDialog(BuildContext context, RemoteMessage message) {
+    Widget okButton = TextButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: Text("OK"));
+
+    AlertDialog alert = AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      elevation: 5,
+      backgroundColor: Colors.yellow[800],
+      title: Text(
+        message.notification!.title!,
+        style: TextStyle(fontSize: 15),
+      ),
+      content: Text(message.notification!.body!),
+      actions: [okButton],
+    );
+
+    showDialog(context: context, builder: (context) => alert);
   }
 }
 

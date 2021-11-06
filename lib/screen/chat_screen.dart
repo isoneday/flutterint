@@ -106,7 +106,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           "createdAt": Timestamp.now()
                         });
                         FocusScope.of(context).requestFocus(FocusNode());
-
+                        insertChatToDatabase(msgEdtController.text);
                         setState(() {
                           msgEdtController.clear();
                         });
@@ -139,4 +139,6 @@ class _ChatScreenState extends State<ChatScreen> {
       dataEmail = email;
     }
   }
+
+  void insertChatToDatabase(String text) {}
 }
